@@ -80,7 +80,7 @@ steps:
           template:
             spec:
               containers:
-                - name: pipeline
+                - name: django
                   image: gcr.io/${PROJECT_ID}/pipeline:${COMMIT_SHA}
         EOF
 
@@ -89,9 +89,16 @@ steps:
           -p "$(cat patch.yaml)" \
           > pipeline.yaml
 
+        kubectl patch --local -o yaml \
+          -f kubernetes/deployments/job-migration.yaml \
+          -p "$(cat patch.yaml)" \
+          > job-migration.yaml
+
         mv pipeline.yaml kubernetes/deployments/pipeline.yaml
+        mv job-migration.yaml kubernetes/deployments/job-migration.yaml
 
         hub add kubernetes/deployments/pipeline.yaml
+        hub add kubernetes/deployments/job-migration.yaml
               
         hub commit -F- <<EOF
         Update the pipeline-application
