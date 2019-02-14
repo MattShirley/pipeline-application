@@ -1,8 +1,11 @@
-FROM golang:1.9.2
-WORKDIR /go/src/github.com/kelseyhightower/app/
-COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build .
+FROM python:3.6-slim
+MAINTAINER Mark Gituma <mark.gituma@gmail.com>
 
-FROM scratch
-COPY --from=0 /go/src/github.com/kelseyhightower/app/app .
-ENTRYPOINT ["/app"]
+ENV PROJECT_ROOT /app
+WORKDIR $PROJECT_ROOT
+
+COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt
+COPY . .
+#CMD python manage.py runserver 0.0.0.0:8000
+ENTRYPOINT python manage.py runserver 0.0.0.0:8000
