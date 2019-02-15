@@ -56,6 +56,7 @@ steps:
         path: /kube
 
   # Clone the pipeline-infrastructure-staging repo.
+  #- name: 'gcr.io/hightowerlabs/hub'
   - name: 'gcr.io/hightowerlabs/hub'
     env:
       - 'HUB_CONFIG=/config/hub'
@@ -85,20 +86,13 @@ steps:
         EOF
 
         kubectl patch --local -o yaml \
-          -f kubernetes/deployments/pipeline.yaml \
+          -f kubernetes/deployments/django.yaml \
           -p "$(cat patch.yaml)" \
-          > pipeline.yaml
+          > django.yaml
 
-        kubectl patch --local -o yaml \
-          -f kubernetes/deployments/job-migration.yaml \
-          -p "$(cat patch.yaml)" \
-          > job-migration.yaml
+        mv django.yaml kubernetes/deployments/django.yaml
 
-        mv pipeline.yaml kubernetes/deployments/pipeline.yaml
-        mv job-migration.yaml kubernetes/deployments/job-migration.yaml
-
-        hub add kubernetes/deployments/pipeline.yaml
-        hub add kubernetes/deployments/job-migration.yaml
+        hub add kubernetes/deployments/django.yaml
               
         hub commit -F- <<EOF
         Update the pipeline-application
