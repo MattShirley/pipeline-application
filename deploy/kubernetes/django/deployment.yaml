@@ -16,7 +16,11 @@ spec:
     spec:
       containers:
         - name: django
-          image: gitumarkk/k8_django_minikube:part_3
+          image: coolbiz_backend:v1
+          imagePullPolicy: Never
+          volumeMounts:
+            - name: localdir
+              mountPath: /testmount
           ports:
             - containerPort: 8000
           env:
@@ -34,3 +38,7 @@ spec:
 
             - name: POSTGRES_HOST
               value: postgres-service
+      volumes:
+        - name: localdir
+          hostPath:
+            path: /testmount
