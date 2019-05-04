@@ -100,12 +100,12 @@ steps:
         EOF
 
         kubectl patch --local -o yaml \
-          -f kubernetes/deployments/django.yaml \
-          -p "$(cat patch.yaml)" \
+          -f kubernetes/deployments/job-migration.yaml \
+          -p "$(cat job-migration-patch.yaml)" \
           > job-migration.yaml
 
         mv django.yaml kubernetes/deployments/django.yaml
-        mv job-migration-patch.yaml kubernetes/deployments/job-migration.yaml
+        mv job-migration.yaml kubernetes/deployments/job-migration.yaml
 
         hub add kubernetes/deployments/django.yaml
         hub add kubernetes/deployments/job-migration.yaml
